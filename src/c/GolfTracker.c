@@ -20,6 +20,8 @@ static TextLayer *s_stroke_layer;
 static TextLayer *s_instruction_layer;
 static ScrollLayer *s_summary_scroll_layer;
 static TextLayer *s_summary_text_layer;
+static TextLayer *s_menu_title_layer;
+static TextLayer *s_menu_option_layer;
 
 // ============================================================================
 // APPLICATION STATE VARIABLES
@@ -233,33 +235,27 @@ static void menu_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  TextLayer *title_layer = text_layer_create(GRect(0, 20, bounds.size.w, 50));
-  text_layer_set_background_color(title_layer, GColorClear);
-  text_layer_set_text_color(title_layer, GColorBlack);
-  text_layer_set_font(title_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-  text_layer_set_text_alignment(title_layer, GTextAlignmentCenter);
-  text_layer_set_text(title_layer, "New Game");
-  layer_add_child(window_layer, text_layer_get_layer(title_layer));
+  s_menu_title_layer = text_layer_create(GRect(0, 20, bounds.size.w, 50));
+  text_layer_set_background_color(s_menu_title_layer, GColorClear);
+  text_layer_set_text_color(s_menu_title_layer, GColorBlack);
+  text_layer_set_font(s_menu_title_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  text_layer_set_text_alignment(s_menu_title_layer, GTextAlignmentCenter);
+  text_layer_set_text(s_menu_title_layer, "New Game");
+  layer_add_child(window_layer, text_layer_get_layer(s_menu_title_layer));
 
-  TextLayer *option_layer = text_layer_create(GRect(0, 80, bounds.size.w, 60));
-  text_layer_set_background_color(option_layer, GColorClear);
-  text_layer_set_text_color(option_layer, GColorBlack);
-  text_layer_set_font(option_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
-  text_layer_set_text_alignment(option_layer, GTextAlignmentCenter);
-  text_layer_set_overflow_text_handling(option_layer, GTextOverflowModeWordWrap);
-  text_layer_set_text(option_layer, "UP: 18 Holes\nDOWN: 9 Holes");
-  layer_add_child(window_layer, text_layer_get_layer(option_layer));
+  s_menu_option_layer = text_layer_create(GRect(0, 80, bounds.size.w, 60));
+  text_layer_set_background_color(s_menu_option_layer, GColorClear);
+  text_layer_set_text_color(s_menu_option_layer, GColorBlack);
+  text_layer_set_font(s_menu_option_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  text_layer_set_text_alignment(s_menu_option_layer, GTextAlignmentCenter);
+  text_layer_set_overflow_text_handling(s_menu_option_layer, GTextOverflowModeWordWrap);
+  text_layer_set_text(s_menu_option_layer, "UP: 18 Holes\nDOWN: 9 Holes");
+  layer_add_child(window_layer, text_layer_get_layer(s_menu_option_layer));
 }
 
 static void menu_window_unload(Window *window) {
-  // Clean up text layers created in load
-  Layer *window_layer = window_get_root_layer(window);
-  for (int i = 0; i < layer_get_num_children(window_layer); i++) {
-    Layer *child = layer_get_child(window_layer, i);
-    if (child && layer_get_type(child) == TextLayerType) {
-      text_layer_destroy((TextLayer *)child);
-    }
-  }
+  text_layer_destroy(s_menu_title_layer);
+  text_layer_destroy(s_menu_option_layer);
 }
 
 // ============================================================================
@@ -357,4 +353,5 @@ int main(void) {
   init();
   app_event_loop();
   deinit();
+  return 0;
 }
