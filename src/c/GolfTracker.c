@@ -213,12 +213,22 @@ static void main_window_unload(Window *window) {
 
 static void menu_up_click_handler(ClickRecognizerRef recognizer, void *context) {
   s_total_holes = 18;
-  window_stack_pop(true);
+  s_game_in_progress = true;
+  save_game_state();
+  
+  // Transition seamlessly to the score tracker
+  window_stack_push(s_main_window, true);
+  window_stack_remove(s_menu_window, false); 
 }
 
 static void menu_down_click_handler(ClickRecognizerRef recognizer, void *context) {
   s_total_holes = 9;
-  window_stack_pop(true);
+  s_game_in_progress = true;
+  save_game_state();
+  
+  // Transition seamlessly to the score tracker
+  window_stack_push(s_main_window, true);
+  window_stack_remove(s_menu_window, false); 
 }
 
 static void menu_select_click_handler(ClickRecognizerRef recognizer, void *context) {
